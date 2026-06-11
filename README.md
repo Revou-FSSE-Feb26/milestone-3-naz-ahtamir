@@ -1,4 +1,4 @@
-# RevoMarket
+# RevoShop
 
 A modern global e-commerce marketplace built with Next.js, featuring real-time product data from the Platzi API.
 
