@@ -2,15 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import type { CartItem } from "@/lib/types";
-import { fmtRp } from "@/lib/format";
+import { fmtUsd } from "@/lib/format";
 import { getCartFromStorage, saveCartToStorage } from "@/lib/cart";
 import { dispatchCartUpdate } from "@/components/cart-actions";
-import { toast } from "sonner";
 
 export function CartPage() {
+  const router = useRouter();
   const { data: session } = useSession();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -50,7 +51,7 @@ export function CartPage() {
   }
 
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const shipping = subtotal >= 500000 ? 0 : 45000;
+  const shipping = subtotal >= 50 ? 0 : 5; // Free shipping over $50, $5 shipping cost
   const total = subtotal + shipping;
 
   return (
@@ -86,12 +87,20 @@ export function CartPage() {
                   className="flex flex-wrap items-center gap-4 rounded-2xl border border-[var(--gray-200)] bg-white p-4"
                 >
                   <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-[var(--gray-50)]">
-                    <Image src={item.imageUrl} alt={item.name} fill className="object-contain p-1" />
+                    {item.imageUrl && item.imageUrl.trim() !== "" ? (
+                      <Image src={item.imageUrl} alt={item.name} fill className="object-contain p-1" />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
+                        No Image
+                      </div>
+                    )}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="font-semibold text-[var(--black)]">{item.name}</div>
-                    <div className="text-xs text-[var(--black)]">{item.category}</div>
-                    <div className="text-[var(--orange)]">{fmtRp(item.price)}</div>
+                    <div className="text-xs text-[var(--black)]">
+                      {typeof item.category === 'string' ? item.category : 'Unknown Category'}
+                    </div>
+                    <div className="text-[var(--orange)]">{fmtUsd(item.price)}</div>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center rounded-lg border">
@@ -104,7 +113,7 @@ export function CartPage() {
                       </button>
                     </div>
                     <span className="min-w-[80px] text-right font-bold text-[var(--black)]">
-                      {fmtRp(item.price * item.qty)}
+                      {fmtUsd(item.price * item.qty)}
                     </span>
                     <button
                       type="button"
@@ -123,17 +132,17 @@ export function CartPage() {
             <h2 className="mb-4 font-bold text-[var(--black)]">Order Summary</h2>
             <div className="flex justify-between text-sm text-[var(--black)] mb-2">
               <span>Subtotal</span>
-              <span>{fmtRp(subtotal)}</span>
+              <span>{fmtUsd(subtotal)}</span>
             </div>
             <div className="flex justify-between text-sm text-[var(--black)] mb-2">
               <span>Shipping</span>
               <span className={shipping === 0 ? "text-[#2d7d2d]" : ""}>
-                {shipping === 0 ? "FREE" : fmtRp(shipping)}
+                {shipping === 0 ? "FREE" : fmtUsd(shipping)}
               </span>
             </div>
             {shipping > 0 && (
               <p className="text-xs text-[var(--black)] mb-4">
-                Add {fmtRp(500000 - subtotal)} more for free shipping
+                Add {fmtUsd(50 - subtotal)} more for free shipping
             </p>
             )}
             {shipping === 0 && (
@@ -141,13 +150,11 @@ export function CartPage() {
             )}
             <div className="flex justify-between border-t pt-4 font-bold text-[var(--black)]">
               <span>Total</span>
-              <span>{fmtRp(total)}</span>
+              <span>{fmtUsd(total)}</span>
             </div>
             <button
               type="button"
-              onClick={() =>
-                toast.info("Checkout coming soon! This is a demo.", { icon: "🛒" })
-              }
+              onClick={() => router.push("/checkout")}
               className="btn btn-primary mt-6 w-full justify-center"
             >
               Proceed to Checkout

@@ -8,27 +8,41 @@ export interface User {
   role: UserRole;
 }
 
-export interface ProductSpecs {
-  [key: string]: string;
-}
-
-export interface Product {
+export type ApiCategory = {
   id: number;
-  slug: string;
   name: string;
-  category: string;
-  description: string;
-  specs: ProductSpecs;
-  features: string[];
+  slug: string;
+  image: string;
+  creationAt: string;
+  updatedAt: string;
+};
+
+export type ApiProduct = {
+  id: number;
+  title: string;
+  slug: string;
   price: number;
-  originalPrice?: number;
-  stock: number;
-  rating: number;
-  reviews: number;
-  imageUrl: string;
-  featured: boolean;
-  badge: string | null;
-}
+  description: string;
+  category: ApiCategory;
+  images: string[];
+  creationAt: string;
+  updatedAt: string;
+};
+
+// ===== TAMBAHKAN INI DI BAWAHNYA UNTUK MENYEMBUHKAN ERROR COMPONENT =====
+export type Product = Omit<ApiProduct, "title" | "images" | "category"> & {
+  name: string;       // Menggantikan 'title' agar UI Admin tidak error
+  imageUrl: string;   // Menggantikan 'images' agar Image Next.js tidak error
+  category: string;   // Menggantikan category object dengan string
+  // Tambahkan properti opsional jika komponen admin Anda membutuhkannya:
+  stock?: number;
+  rating?: number;
+  reviews?: number;
+  features?: string[];
+  specs?: Record<string, string>;
+  featured?: boolean;
+  badge?: string | null;
+};
 
 export interface Order {
   id: string;

@@ -1,6 +1,6 @@
 {
   "storeName": "RevoShop",
-  "currency": "IDR (Rp)",
+  "currency": "USD ($)",
   "taxRate": "11% (PPN)",
   "defaultShipping": "JNE Regular"
 }

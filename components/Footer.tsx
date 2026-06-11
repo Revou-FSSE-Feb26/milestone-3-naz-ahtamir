@@ -2,9 +2,37 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+
+interface Category {
+  id: number;
+  name: string;
+}
 
 export function Footer() {
   const pathname = usePathname();
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    // Fetch categories from API
+    fetch("/api/categories")
+      .then((res) => res.json())
+      .then((data: Category[]) => {
+        // Take first 4 categories for footer
+        setCategories(data.slice(0, 4));
+      })
+      .catch((err) => {
+        console.error("Failed to load categories:", err);
+        // Fallback categories (ensure all have at least 2 characters)
+        setCategories([
+          { id: 1, name: "Electronics" },
+          { id: 2, name: "Clothes" },
+          { id: 3, name: "Furniture" },
+          { id: 4, name: "Shoes" }
+        ]);
+      });
+  }, []);
+
   if (pathname.startsWith("/admin")) return null;
 
   return (
@@ -14,8 +42,10 @@ export function Footer() {
           <div>
             <div className="mb-4 flex items-center gap-2">
               <div className="flex h-9 w-9 items-center justify-center rounded bg-[var(--orange)]">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="9" cy="21" r="1"/>
+                  <circle cx="20" cy="21" r="1"/>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                 </svg>
               </div>
               <span className="font-[family-name:var(--font-montserrat)] text-lg font-extrabold uppercase">
@@ -23,8 +53,7 @@ export function Footer() {
               </span>
             </div>
             <p className="text-sm text-[var(--black)]">
-              Indonesia&apos;s trusted industrial safety equipment supplier. Certified PPE for manufacturing,
-              construction, mining, and logistics.
+              Your trusted global marketplace for quality products across all categories. Fast delivery, competitive prices, and authentic guaranteed.
             </p>
           </div>
           <div>
@@ -39,23 +68,25 @@ export function Footer() {
           <div>
             <div className="mb-4 text-xs font-bold uppercase tracking-wider text-[var(--black)]">Categories</div>
             <div className="flex flex-col gap-2">
-              {["Safety Helmet", "Safety Shoes", "Safety Gloves", "Respirator"].map((c) => (
-                <Link
-                  key={c}
-                  href={`/products?category=${encodeURIComponent(c)}`}
-                  className="text-sm text-[var(--black)] hover:text-[var(--orange)]"
-                >
-                  {c}
-                </Link>
-              ))}
+              {categories
+                .filter((c) => c.name.length >= 2) // Filter out categories with less than 2 characters
+                .map((c) => (
+                  <Link
+                    key={c.id}
+                    href={`/products?category=${encodeURIComponent(c.name)}`}
+                    className="text-sm text-[var(--black)] hover:text-[var(--orange)]"
+                  >
+                    {c.name}
+                  </Link>
+                ))}
             </div>
           </div>
           <div>
             <div className="mb-4 text-xs font-bold uppercase tracking-wider text-[var(--black)]">Contact</div>
             <div className="space-y-2 text-sm text-[var(--black)]">
-              <p>Jl. Keselamatan No. 1, Indonesia</p>               
-              <p>0822-2071-5073</p>
-              <p>Mon-Sat : 08:00 – 17:00 WITA</p>
+              <p>Global Marketplace HQ</p>               
+              <p>+1-800-REVO-SHOP</p>
+              <p>Mon-Fri : 9:00 – 18:00 UTC</p>
               <a href="https://www.naz-ahtamir.site/"><p className="font-bold">www.naz-ahtamir.site</p></a>              
             </div>
           </div>
@@ -66,7 +97,7 @@ export function Footer() {
           <p className="text-xs text-[var(--black)]">© 2026 RevoShop. <a href="https://www.naz-ahtamir.site/"
             ><span className="text-[var(--orange)] font-bold">naz-ahtamir</span></a></p>
           <div className="flex gap-2">
-            {["SNI", "ISO 9001", "OHSAS"].map((c) => (
+            {["Secure", "Global"].map((c) => (
               <span key={c} className="badge badge-orange text-[10px]">
                 {c}
               </span>

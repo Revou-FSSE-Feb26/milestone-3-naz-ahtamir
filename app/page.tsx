@@ -1,90 +1,94 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ProductCard } from "@/components/ProductCard";
-import { getProducts } from "@/lib/data";
+import { fetchProducts } from "@/lib/data";
 import { categories, testimonials } from "@/lib/constants";
-import { fmtRp } from "@/lib/format";
-import { Trophy, Truck, DollarSign, Handshake, LucideIcon } from "lucide-react";
+import { Trophy, Truck, DollarSign, Handshake, LucideIcon, ArrowRight } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
-  const products = getProducts();
-  const featured = products.filter((p) => p.featured).slice(0, 6);
-  const heroPreview = products.filter((p) => p.featured).slice(0, 3);
+export default async function HomePage() {
+  const allProducts = await fetchProducts();
+  const featured = allProducts.slice(0, 6);
+  const heroPreview = allProducts.slice(0, 4);
+
   const features: [LucideIcon, string, string][] = [
-  [Trophy, "Certified Products", "All products meet SNI, ISO, and ANSI safety standards."],
-  [Truck, "Fast Delivery", "Same-day dispatch for orders before 2PM nationwide."],
-  [DollarSign, "Competitive Pricing", "Factory-direct pricing with volume discounts."],
-  [Handshake, "Trusted Supplier", "Preferred vendor for 2,400+ corporations."],
+    [Trophy, "Quality Assured", "All sellers verified and products authenticated."],
+    [Truck, "Fast Delivery", "Same-day dispatch for orders before 2PM nationwide."],
+    [DollarSign, "Best Prices", "Competitive pricing from trusted sellers nationwide."],
+    [Handshake, "Trusted Platform", "Preferred marketplace for thousands of shoppers."],
   ];
 
   return (
     <>
-      <section className="relative overflow-hidden border-b border-[var(--gray-200)] bg-white">
-        <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-[var(--orange)] opacity-[0.06]" />
-        <div className="absolute bottom-0 left-0 h-80 w-80 rounded-full bg-[var(--orange)] opacity-[0.04]" />
-        <div className="container-page relative py-20">
-          <div className="grid items-center gap-16 lg:grid-cols-2">
-            <div>
-              <div className="mb-5 flex items-center gap-2.5">
-                <div className="h-0.5 w-8 bg-[var(--orange)]" />
-                <span className="subheading">Trusted Industrial Supplier</span>
-              </div>
-              <h1 className="font-[family-name:var(--font-montserrat)] text-5xl font-extrabold uppercase leading-none tracking-tight text-[var(--black)] md:text-7xl">
-                Protecting
-                <br />
-                Your
-                <br />
-                <span className="text-[var(--orange)]">Workforce</span>
-                <br />
-                Starts Here
-              </h1>
-              <p className="mt-6 max-w-md text-base text-[var(--black)]">
-                Complete range of certified PPE & industrial safety equipment for manufacturing,
-                construction, mining, and logistics industries across Indonesia.
+      {/* ===== HERO ===== */}
+      <section className="bg-white">
+        <div className="container-page">
+          <div className="grid min-h-[88vh] items-center gap-0 lg:grid-cols-[1fr_1fr]">
+            {/* Left — typography dominant */}
+            <div className="py-20 pr-0 lg:pr-16">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[4px] text-[#8141E6]">
+                Indonesia's Online Marketplace
               </p>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="/products" className="btn btn-primary btn-lg">
-                  Shop Now
+              <h1
+                className="font-[family-name:var(--font-display)] text-[clamp(56px,8vw,104px)] leading-[0.92] tracking-tight text-black"
+              >
+                Shop
+                <br />
+                <em className="not-italic text-[#8141E6]">Everything</em>
+                <br />
+                You Need.
+              </h1>
+              <p className="mt-8 max-w-sm text-base leading-relaxed text-neutral-500">
+                Millions of products from verified sellers across Indonesia. Electronics, fashion, home & living — all in one place.
+              </p>
+              <div className="mt-10 flex flex-wrap items-center gap-4">
+                <Link
+                  href="/products"
+                  className="inline-flex items-center gap-2 bg-black px-8 py-4 text-sm font-semibold text-white transition-all hover:bg-[#8141E6]"
+                >
+                  Shop Now <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/products" className="btn btn-secondary btn-lg">
+                <Link
+                  href="/products"
+                  className="inline-flex items-center gap-2 border-b border-black pb-0.5 text-sm font-semibold text-black transition-all hover:border-[#8141E6] hover:text-[#8141E6]"
+                >
                   View Catalog
                 </Link>
               </div>
-              <div className="mt-12 flex gap-8">
-                {[
-                  ["500+", "Products Available"],
-                  ["2,400+", "Corporate Clients"],
-                  ["99.2%", "On-time Delivery"],
-                ].map(([num, label]) => (
+              {/* Stats row */}
+              <div className="mt-14 flex gap-10 border-t border-neutral-100 pt-8">
+                {[["500+", "Products"], ["50K+", "Customers"], ["99.2%", "On-time Delivery"]].map(([num, label]) => (
                   <div key={label}>
-                    <div className="font-[family-name:var(--font-montserrat)] text-2xl font-extrabold text-[var(--black)]">
-                      {num}
-                    </div>
-                    <div className="text-xs text-[var(--black)]">{label}</div>
+                    <div className="font-[family-name:var(--font-display)] text-3xl text-black">{num}</div>
+                    <div className="mt-1 text-xs text-neutral-400">{label}</div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="flex flex-col gap-4">
-              {heroPreview.map((p) => (
+
+            {/* Right — product image grid */}
+            <div className="hidden lg:grid grid-cols-2 gap-3 py-10 pl-3">
+              {heroPreview.map((p, i) => (
                 <Link
                   key={p.id}
                   href={`/products/${p.slug}`}
-                  className="flex items-center gap-4 rounded-2xl border border-[var(--gray-200)] bg-[var(--orange-pale)] p-5 transition-all hover:border-[var(--orange)] hover:translate-x-1"
+                  className="group relative overflow-hidden bg-neutral-50"
+                  style={{ aspectRatio: i === 0 ? "3/4" : "1/1" }}
                 >
-                  <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-xl bg-white">
-                    <Image src={p.imageUrl} alt={p.name} fill className="object-contain p-2" />
+                  {p.images?.[0] && (
+                    <Image
+                      src={p.images[0]}
+                      alt={p.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/0 transition-all group-hover:bg-black/10" />
+                  <div className="absolute bottom-0 left-0 right-0 translate-y-full bg-white/95 p-3 transition-transform duration-300 group-hover:translate-y-0">
+                    <div className="truncate text-xs font-semibold text-black">{p.title}</div>
+                    <div className="text-xs text-neutral-500">${p.price}</div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="truncate font-semibold text-[var(--black)]">{p.name}</div>
-                    <div className="text-xs text-[var(--black)]">{p.category}</div>
-                    <div className="font-[family-name:var(--font-montserrat)] text-lg font-bold text-[var(--orange)]">
-                      {fmtRp(p.price)}
-                    </div>
-                  </div>
-                  {p.badge && <span className="badge badge-orange shrink-0">{p.badge}</span>}
                 </Link>
               ))}
             </div>
@@ -92,65 +96,66 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[var(--gray-50)] py-16">
-        <div className="container-page">
-          <div className="mb-12 text-center">
-            <p className="subheading">Browse By Category</p>
-            <h2 className="display-md mt-2 text-[var(--black)]">Safety Equipment Categories</h2>
-          </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-            {categories.map((c) => {
-              const count = products.filter((p) => p.category === c.name).length;
-              return (
-                <Link
-                  key={c.name}
-                  href={`/products?category=${encodeURIComponent(c.name)}`}
-                  className="rounded-2xl border-[1.5px] border-[var(--gray-200)] bg-white p-6 text-center transition-all hover:-translate-y-1 hover:border-[var(--orange)] hover:shadow-lg"
-                >
-                  <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-[var(--gray-100)]">
-                    <c.Icon className="h-11 w-11 text-[var(--orange)]" />   {/* ✅ pakai JSX */}
-                  </div>
-                  <div className="text-sm font-bold text-[var(--black)]">{c.name}</div>
-                  <div className="mt-1 text-xs text-[var(--black)]">{count} Products</div>
-                </Link>
-              );
-            })}
-
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16">
-        <div className="container-page">
-          <div className="mb-12 text-center">
-            <p className="subheading">Why RevoShop</p>
-            <h2 className="display-md mt-2 text-[var(--black)]">The Industrial Safety Partner You Can Trust</h2>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {features.map(([Icon, title, desc]) => (
-            <div
-              key={title}
-              className="rounded-2xl border-[1.5px] border-[var(--gray-200)] bg-white p-8 text-center transition-all hover:-translate-y-1 hover:border-[var(--orange)]">
-              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-[var(--orange-pale)]">
-                <Icon className="h-11 w-11 text-[var(--orange)]" />
-              </div>
-              <h3 className="mb-2 font-bold text-[var(--black)]">{title}</h3>
-              <p className="text-sm text-[var(--gray-600)]">{desc}</p>
-            </div>
+      {/* ===== MARQUEE STRIP BERJALAN (Tailwind v4) ===== */}
+      <div className="overflow-hidden border-y border-neutral-100 bg-[#8141E6] py-3">
+        {/* Class animate-marquee sekarang sudah aktif dan otomatis berjalan */}
+        <div className="flex w-max gap-12 whitespace-nowrap animate-marquee">
+          {Array(3).fill(["Free Shipping Above $50", "New Arrivals Daily", "Verified Sellers Only", "30-Day Returns", "Secure Payment"]).flat().map((text, i) => (
+            <span key={i} className="text-xs font-semibold uppercase tracking-[3px] text-white/80">
+              {text} <span className="mx-6 text-white/30">·</span>
+            </span>
           ))}
+        </div>
+      </div>
+
+      {/* ===== CATEGORIES ===== */}
+      <section className="bg-white py-20">
+        <div className="container-page">
+          <div className="mb-12 flex items-end justify-between">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[3px] text-[#8141E6]">Categories</p>
+              <h2 className="font-[family-name:var(--font-display)] text-4xl text-black">
+                Shop by Category
+              </h2>
+            </div>
+            <Link href="/products" className="text-sm font-semibold text-black underline-offset-4 hover:underline">
+              All Categories →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-px bg-neutral-100 md:grid-cols-3 lg:grid-cols-6">
+            {categories.map((c) => (
+              <Link
+                key={c.name}
+                href={`/products?category=${encodeURIComponent(c.name)}`}
+                className="group flex flex-col items-center bg-white px-4 py-8 text-center transition-colors hover:bg-[#8141E6]"
+              >
+                <div className="mb-4 flex h-25 w-25 items-center justify-center rounded-full bg-neutral-100 transition-colors group-hover:bg-white/20">
+                  <c.Icon className="h-14 w-14 text-[#8141E6] transition-colors group-hover:text-white" />
+                </div>
+                <div className="text-xs font-semibold text-black transition-colors group-hover:text-white">
+                  {c.name}
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="py-16">
+      {/* ===== FEATURED PRODUCTS ===== */}
+      <section className="bg-neutral-50 py-20">
         <div className="container-page">
-          <div className="mb-12 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-12 flex items-end justify-between">
             <div>
-              <p className="subheading">Top Picks</p>
-              <h2 className="display-md mt-2 text-[var(--black)]">Featured Products</h2>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[3px] text-[#8141E6]">Top Picks</p>
+              <h2 className="font-[family-name:var(--font-display)] text-4xl text-black">
+                Featured Products
+              </h2>
             </div>
-            <Link href="/products" className="btn btn-outline">
-              View All Products →
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 border border-black px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-black transition-all hover:bg-black hover:text-white"
+            >
+              View All <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -161,63 +166,130 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-[var(--orange)]/20 bg-[var(--orange-pale)] py-16">
-        <div className="container-page grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            <span className="badge badge-orange mb-4">Limited Time Offer</span>
-            <h2 className="font-[family-name:var(--font-montserrat)] text-4xl font-extrabold uppercase text-[var(--black)]">
-              Up to <span className="text-[var(--orange)]">40% Off</span>
-              <br />
-              Corporate Packages
+      {/* ===== WHY US ===== */}
+      <section className="bg-white py-20">
+        <div className="container-page">
+          <div className="mb-12 text-center">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[3px] text-[#8141E6]">Why RevoShop</p>
+            <h2 className="font-[family-name:var(--font-display)] text-4xl text-black">
+              The Marketplace You Can Trust
             </h2>
-            <p className="mt-4 text-[var(--black)]">
-              Bulk purchasing discounts for companies with 50+ employees.
-            </p>
-            <Link href="/promo" className="btn btn-primary btn-lg mt-6 inline-flex">
-              View All Promos
-            </Link>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              ["40%", "Bulk Order (50+ units)"],
-              ["25%", "Corporate Package"],
-              ["FREE", "Shipping > Rp500K"],
-              ["12%", "New Member Discount"],
-            ].map(([pct, label]) => (
-              <div key={label} className="rounded-xl border border-[var(--orange)]/30 bg-white p-5">
-                <div className="font-[family-name:var(--font-montserrat)] text-3xl font-extrabold text-[var(--orange)]">
-                  {pct}
+          <div className="grid gap-px bg-neutral-100 md:grid-cols-2 lg:grid-cols-4">
+            {features.map(([Icon, title, desc]) => (
+              <div key={title} className="group bg-white p-10 transition-colors hover:bg-[#8141E6]">
+                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-[#8141E6]/10 transition-colors group-hover:bg-white/20">
+                  <Icon className="h-6 w-6 text-[#8141E6] transition-colors group-hover:text-white" />
                 </div>
-                <div className="mt-1 text-sm text-[var(--black)]">{label}</div>
+                <h3 className="mb-2 text-sm font-bold text-black transition-colors group-hover:text-white">
+                  {title}
+                </h3>
+                <p className="text-sm leading-relaxed text-neutral-500 transition-colors group-hover:text-white/70">
+                  {desc}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-[var(--gray-50)] py-16">
+      {/* ===== PROMO BANNER ===== */}
+      <section className="bg-black py-24">
+        <div className="container-page">
+          <div className="grid items-center gap-16 lg:grid-cols-2">
+            <div>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[3px] text-[#8141E6]">
+                Limited Time
+              </p>
+              <h2 className="font-[family-name:var(--font-display)] text-[clamp(40px,5vw,72px)] leading-[0.95] text-white">
+                Up to{" "}
+                <span className="text-[#8141E6]">40%</span>
+                <br />
+                Off Special
+                <br />
+                Packages
+              </h2>
+              <p className="mt-6 max-w-sm text-sm leading-relaxed text-neutral-400">
+                Bulk purchasing discounts for companies with 50+ employees. Special pricing on complete sets.
+              </p>
+              <Link
+                href="/promo"
+                className="mt-8 inline-flex items-center gap-2 bg-[#8141E6] px-8 py-4 text-sm font-semibold text-white transition-all hover:bg-white hover:text-black"
+              >
+                View All Promos <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                ["40%", "Bulk Order", "50+ units"],
+                ["25%", "Corporate", "Package deal"],
+                ["FREE", "Shipping", "Orders > $50"],
+                ["12%", "New Member", "First order"],
+              ].map(([pct, label, sub]) => (
+                <div key={label} className="border border-neutral-800 p-6 transition-all hover:border-[#8141E6]">
+                  <div className="font-[family-name:var(--font-display)] text-5xl text-[#8141E6]">{pct}</div>
+                  <div className="mt-3 text-sm font-semibold text-white">{label}</div>
+                  <div className="mt-0.5 text-xs text-neutral-500">{sub}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== TESTIMONIALS ===== */}
+      <section className="bg-neutral-50 py-20">
         <div className="container-page">
           <div className="mb-12 text-center">
-            <p className="subheading">Testimonials</p>
-            <h2 className="display-md mt-2 text-[var(--black)]">What Our Clients Say</h2>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[3px] text-[#8141E6]">Reviews</p>
+            <h2 className="font-[family-name:var(--font-display)] text-4xl text-black">
+              What Our Clients Say
+            </h2>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-px bg-neutral-100 md:grid-cols-3">
             {testimonials.map((t) => (
-              <div
-                key={t.name}
-                className="rounded-2xl border-[1.5px] border-[var(--gray-200)] text-center bg-white p-7">                              
-                <p className="mb-5 text-sm italic text-[var(--black)]"> <span className="text-[var(--orange)] text-sm font-bold">&ldquo;</span>{t.text} <span className="text-[var(--orange)] font-bold text-sm">&rdquo;</span></p>                
-                <div className="flex items-center gap-3 justify-center">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--orange)] text-sm font-bold text-white">
+              <div key={t.name} className="bg-white p-10">
+                <div className="mb-6 font-[family-name:var(--font-display)] text-6xl leading-none text-[#8141E6]">
+                  "
+                </div>
+                <p className="mb-8 text-sm leading-relaxed text-neutral-600">{t.text}</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#8141E6] text-xs font-bold text-white">
                     {t.initials}
                   </div>
                   <div>
-                    <div className="text-sm font-bold text-[var(--black)]">{t.name}</div>
-                    <div className="text-xs text-[var(--black)]">{t.company}</div>
+                    <div className="text-sm font-bold text-black">{t.name}</div>
+                    <div className="text-xs text-neutral-400">{t.company}</div>
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FOOTER CTA ===== */}
+      <section className="bg-[#8141E6] py-16">
+        <div className="container-page text-center">
+          <h2 className="font-[family-name:var(--font-display)] text-[clamp(36px,5vw,64px)] leading-tight text-white">
+            Start Shopping Today
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-sm text-white/70">
+            Join 50,000+ satisfied customers across Indonesia.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 bg-white px-8 py-4 text-sm font-semibold text-[#8141E6] transition-all hover:bg-black hover:text-white"
+            >
+              Browse Products <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/register"
+              className="inline-flex items-center gap-2 border border-white/40 px-8 py-4 text-sm font-semibold text-white transition-all hover:border-white hover:bg-white/10"
+            >
+              Create Account
+            </Link>
           </div>
         </div>
       </section>

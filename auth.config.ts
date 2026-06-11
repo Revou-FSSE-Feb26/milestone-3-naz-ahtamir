@@ -21,14 +21,28 @@ export const authConfig = {
     },
     authorized({ auth, request }) {
       const isAdmin = request.nextUrl.pathname.startsWith("/admin");
-      if (!isAdmin) return true;
-      if (!auth?.user) return false;
-      if (auth.user.role !== "ADMIN") {
-        return Response.redirect(new URL("/", request.nextUrl));
+      const isCheckout = request.nextUrl.pathname === "/checkout";
+      
+      // Protect /checkout untuk authenticated users
+      if (isCheckout) {
+        if (!auth?.user) {
+          return false;
+        }
+        return true;
       }
+      
+      // Protect /admin untuk ADMIN role
+      if (isAdmin) {
+        if (!auth?.user) return false;
+        if (auth.user.role !== "ADMIN") {
+          return Response.redirect(new URL("/", request.nextUrl));
+        }
+        return true;
+      }
+      
       return true;
     },
   },
-  providers: [],
+  providers: [], // Required by NextAuthConfig, providers added in auth.ts
   session: { strategy: "jwt" },
 } satisfies NextAuthConfig;

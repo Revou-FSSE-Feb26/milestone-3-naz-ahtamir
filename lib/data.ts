@@ -1,9 +1,23 @@
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
-import type { Order, Product, StoreSettings, User } from "./types";
+import type { Order, StoreSettings, User, ApiProduct, Product } from "./types";
 
 const DATA_DIR = join(process.cwd(), "data");
+const API_BASE = "https://api.escuelajs.co/api/v1";
 
+// ===== PLATZI API =====
+export async function fetchProducts(): Promise<ApiProduct[]> {
+  const res = await fetch(`${API_BASE}/products`, { cache: "no-store" });
+  if (!res.ok) throw new Error("Failed to fetch products");
+  return res.json();
+}
+
+export async function fetchProductBySlug(slug: string): Promise<ApiProduct | undefined> {
+  const products = await fetchProducts();
+  return products.find((p) => p.slug === slug);
+}
+
+// ===== LOCAL JSON =====
 function readJson<T>(filename: string): T {
   const raw = readFileSync(join(DATA_DIR, filename), "utf-8");
   return JSON.parse(raw) as T;
@@ -13,45 +27,13 @@ function writeJson<T>(filename: string, data: T): void {
   writeFileSync(join(DATA_DIR, filename), JSON.stringify(data, null, 2), "utf-8");
 }
 
+// ===== ADMIN PRODUCTS (LOCAL) =====
 export function getProducts(): Product[] {
   return readJson<Product[]>("products.json");
 }
 
-export function getProductBySlug(slug: string): Product | undefined {
-  return getProducts().find((p) => p.slug === slug);
-}
-
-export function getProductById(id: number): Product | undefined {
-  return getProducts().find((p) => p.id === id);
-}
-
 export function saveProducts(products: Product[]): void {
   writeJson("products.json", products);
-}
-
-export function upsertProduct(product: Product): Product {
-  const products = getProducts();
-  const idx = products.findIndex((p) => p.id === product.id);
-  if (idx >= 0) {
-    products[idx] = product;
-  } else {
-    products.push(product);
-  }
-  saveProducts(products);
-  return product;
-}
-
-export function deleteProduct(id: number): boolean {
-  const products = getProducts();
-  const filtered = products.filter((p) => p.id !== id);
-  if (filtered.length === products.length) return false;
-  saveProducts(filtered);
-  return true;
-}
-
-export function getNextProductId(): number {
-  const products = getProducts();
-  return products.length ? Math.max(...products.map((p) => p.id)) + 1 : 1;
 }
 
 export function getUsers(): User[] {

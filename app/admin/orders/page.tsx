@@ -1,5 +1,5 @@
 import { getOrders } from "@/lib/data";
-import { fmtRp } from "@/lib/format";
+import { fmtUsd } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -42,7 +42,7 @@ export default function AdminOrdersPage() {
                   <td className="px-4 py-3 text-[var(--black)]">{o.customer}</td>
                   <td className="px-4 py-3 text-[var(--black)]">{o.product}</td>
                   <td className="px-4 py-3 text-[var(--black)]">{o.qty}</td>
-                  <td className="px-4 py-3 text-[var(--black)]">{fmtRp(o.total)}</td>
+                  <td className="px-4 py-3 text-[var(--black)]">{fmtUsd(o.total)}</td>
                   <td className="px-4 py-3">
                     <span className={`badge ${statusBadge(o.status)}`}>{o.status}</span>
                   </td>

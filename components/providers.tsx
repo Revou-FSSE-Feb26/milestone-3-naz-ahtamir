@@ -7,7 +7,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       {children}
-      <Toaster position="top-right" richColors />
+      <Toaster 
+        position="top-right" 
+        richColors 
+        expand={true}
+        offset={16}
+      />
     </SessionProvider>
   );
 }

@@ -1,3 +1,2 @@
-export function fmtRp(n: number): string {
-  return "Rp " + n.toLocaleString("id-ID");
-}
+export const fmtUsd = (n: number) =>
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n);

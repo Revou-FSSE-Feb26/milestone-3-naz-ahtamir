@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Product } from "@/lib/types";
-import { fmtRp } from "@/lib/format";
+import { fmtUsd } from "@/lib/format";
 import { toast } from "sonner";
 
 interface ProductAdminClientProps {
@@ -47,8 +47,8 @@ export function ProductAdminClient({ initialProducts }: ProductAdminClientProps)
 
   const openEdit = (p: Product) => {
     setEditing({ ...p, isNew: false });
-    setSpecsText(JSON.stringify(p.specs, null, 2));
-    setFeaturesText(p.features.join("\n"));
+    setSpecsText(JSON.stringify(p.specs || {}, null, 2));
+    setFeaturesText((p.features || []).join("\n"));
   };
 
   const openNew = () => {
@@ -128,7 +128,6 @@ export function ProductAdminClient({ initialProducts }: ProductAdminClientProps)
       stock: Number(editing.stock),
       rating: Number(editing.rating),
       reviews: Number(editing.reviews),
-      originalPrice: editing.originalPrice ? Number(editing.originalPrice) : undefined,
       imageUrl,
     };
     const res = await fetch("/api/admin/products", {
@@ -296,16 +295,22 @@ export function ProductAdminClient({ initialProducts }: ProductAdminClientProps)
                 <tr key={p.id} className="border-t border-[var(--gray-100)]">
                   <td className="px-4 py-3">
                     <div className="relative h-11 w-11 overflow-hidden rounded bg-[var(--gray-50)]">
-                      <Image src={p.imageUrl} alt="" fill className="object-contain" />
+                      {p.imageUrl && p.imageUrl.trim() !== "" ? (
+                        <Image src={p.imageUrl} alt="" fill className="object-contain" />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
+                          No Image
+                        </div>
+                      )}
                     </div>
                   </td>
                   <td className="max-w-[200px] px-4 py-3 font-semibold text-[var(--black)]">{p.name}</td>
                   <td className="px-4 py-3">
                     <span className="badge badge-gray">{p.category}</span>
                   </td>
-                  <td className="px-4 py-3 font-semibold text-[var(--black)]">{fmtRp(p.price)}</td>
-                  <td className={`px-4 py-3 ${p.stock < 100 ? "text-[var(--orange)] font-semibold" : "text-[var(--black)]"}`}>
-                    {p.stock}
+                  <td className="px-4 py-3 font-semibold text-[var(--black)]">{fmtUsd(p.price)}</td>
+                  <td className={`px-4 py-3 ${(p.stock ?? 0) < 100 ? "text-[var(--orange)] font-semibold" : "text-[var(--black)]"}`}>
+                    {p.stock ?? 0}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-2">

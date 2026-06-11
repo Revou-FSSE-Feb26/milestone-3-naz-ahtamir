@@ -1,35 +1,31 @@
-import { HardHat, Footprints, Hand, Shirt, Glasses, ShieldAlert } from "lucide-react";
+import { Smartphone, ShoppingBag, Home, ShieldAlert, Glasses, Hand } from "lucide-react";
 
-type Category = {
-  name: string;
-  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-};
 export const categories = [
-  { name: "Safety Helmet", Icon: HardHat },
-  { name: "Safety Shoes", Icon: Footprints },
-  { name: "Safety Gloves", Icon: Hand },
-  { name: "Reflective Vest", Icon: Shirt },
-  { name: "Safety Goggles", Icon: Glasses },
-  { name: "Respirator", Icon: ShieldAlert },
+  { name: "Electronics", Icon: Smartphone },
+  { name: "Fashion", Icon: ShoppingBag },
+  { name: "Home & Living", Icon: Home },
+  { name: "Sports & Outdoors", Icon: ShieldAlert },
+  { name: "Books & Media", Icon: Glasses },
+  { name: "Beauty & Health", Icon: Hand },
 ];
 
 export const testimonials = [
   {
-    text: " RevoShop has been our primary PPE supplier for 3 years. Quality is consistently excellent and delivery is always on time. Their corporate account management is outstanding",
+    text: " RevoShop has the best selection and fastest delivery. Great prices and authentic products from trusted sellers. My go-to marketplace!",
     name: "Budi Santoso",
-    company: "PT Semen Indonesia – HSE Manager",
+    company: "Jakarta, Indonesia",
     initials: "BS",
   },
   {
-    text: " The bulk pricing for our 800-person mining operation saves us significantly every quarter. Certified products give us confidence in compliance with K3 regulations",
+    text: " Love shopping here! Wide variety of products, reliable sellers, and excellent customer service. Always on time with delivery. Highly recommended!",
     name: "Sarah Wijaya",
-    company: "PT Vale Indonesia – Safety Director",
+    company: "Bandung, Indonesia",
     initials: "SW",
   },
   {
-    text: " Fast response, genuine products, and competitive pricing. We equipped our entire 200-person construction crew through RevoShop. Highly recommended",
+    text: " The variety is amazing and prices are competitive. Fast response from sellers and smooth checkout process. This is my favorite marketplace!",
     name: "Ahmad Fauzi",
-    company: "Waskita Karya – Project Manager",
+    company: "Surabaya, Indonesia",
     initials: "AF",
   },
 ];
@@ -37,16 +33,16 @@ export const testimonials = [
 export const faqs: Record<string, { q: string; a: string }[]> = {
   Ordering: [
     {
-      q: "How do I place a bulk/corporate order?",
-      a: "Contact our corporate sales team via WhatsApp or email corporate@revoshop.co.id. We offer dedicated account management, custom quotes, and flexible payment terms for orders above Rp 10 juta.",
+      q: "How do I place an order?",
+      a: "Browse products, add to cart, and proceed to checkout. You'll need to be logged in. New users can register with email and password.",
     },
     {
-      q: "Can I order custom branded PPE?",
-      a: "Yes! We offer logo printing and custom color options for most products with minimum order quantities.",
+      q: "Can I purchase as a guest?",
+      a: "No, you need to create an account to checkout. Registration is quick and free!",
     },
     {
       q: "What payment methods are accepted?",
-      a: "We accept bank transfer, credit/debit cards, e-wallets, and COD for eligible areas. Corporate accounts can access NET-30 payment terms.",
+      a: "We accept bank transfer, credit/debit cards, e-wallets, and COD for eligible areas.",
     },
   ],
   Payment: [
@@ -55,42 +51,42 @@ export const faqs: Record<string, { q: string; a: string }[]> = {
       a: "Yes. All transactions are secured with SSL encryption via PCI-DSS compliant payment partners.",
     },
     {
-      q: "Do you offer corporate payment terms?",
-      a: "Yes, verified corporate accounts with order history above Rp 50 juta can apply for NET-30 payment terms.",
+      q: "Can I change my payment method after ordering?",
+      a: "Yes, you can modify payment details if your order hasn't been processed yet. Contact support quickly.",
     },
   ],
   Delivery: [
     {
       q: "How fast is shipping?",
-      a: "Orders before 14:00 WIB are dispatched same day. Jabodetabek: 1-2 business days. Other cities: 2-5 business days.",
+      a: "Orders are processed same day. Jabodetabek: 1-2 business days. Other areas: 2-7 business days.",
     },
     {
       q: "Do you ship nationally?",
-      a: "Yes, we ship to all major cities across Indonesia using JNE, J&T, SiCepat, and others.",
+      a: "Yes, we ship to all areas across Indonesia using various courier services.",
     },
     {
       q: "Is free shipping available?",
-      a: "Free shipping applies to orders above Rp 500,000 for standard delivery within Java.",
+      a: "Free shipping applies to orders above Rp 100,000 for standard delivery.",
     },
   ],
   Returns: [
     {
       q: "What is your return policy?",
-      a: "Products can be returned within 30 days if unused and in original packaging. Defective products: 90 days.",
+      a: "Products can be returned within 30 days if unused and in original packaging. Damaged items accepted up to 90 days.",
     },
     {
       q: "How do I initiate a return?",
-      a: "Contact customer service with your order number and photos of the item.",
+      a: "Contact our support with your order number and photos. Returns are processed within 5-7 business days.",
     },
   ],
-  Warranty: [
+  Products: [
     {
-      q: "What warranty comes with products?",
-      a: "Most products carry a 1-year manufacturer warranty. Safety critical items carry 3-year warranty.",
+      q: "Are all products authentic?",
+      a: "Yes, we verify all sellers and authenticate products. Our strict quality control ensures genuine items only.",
     },
     {
-      q: "How do I claim warranty?",
-      a: "Contact our warranty team with order number and defect description.",
+      q: "How do I know product quality?",
+      a: "Check product ratings, customer reviews, and seller ratings. Our quality guarantee backs every purchase.",
     },
   ],
 };

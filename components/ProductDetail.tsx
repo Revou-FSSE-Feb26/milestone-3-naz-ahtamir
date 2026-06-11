@@ -3,80 +3,69 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import type { Product } from "@/lib/types";
-import { fmtRp } from "@/lib/format";
+import type { ApiProduct } from "@/lib/types";
+import { fmtUsd } from "@/lib/format";
 import { ProductCard } from "@/components/ProductCard";
 import { addToCartClient } from "@/components/cart-actions";
 
 interface ProductDetailProps {
-  product: Product;
-  related: Product[];
+  product: ApiProduct;
+  related: ApiProduct[];
 }
 
 export function ProductDetail({ product, related }: ProductDetailProps) {
   const [qty, setQty] = useState(1);
-  const discount = product.originalPrice
-    ? Math.round((1 - product.price / product.originalPrice) * 100)
-    : 0;
+  const imageUrl = product.images?.[0] || "";
 
   return (
     <div className="container-page py-10">
       <div className="grid gap-12 lg:grid-cols-2">
         <div>
           <div className="relative aspect-square overflow-hidden rounded-2xl border border-[var(--gray-200)] bg-[var(--gray-50)]">
-            <Image src={product.imageUrl} alt={product.name} fill className="object-contain p-8" priority />
-          </div>
-        </div>
-        <div>
-          <div className="mb-3 flex flex-wrap gap-2">
-            <span className="badge badge-orange">{product.category}</span>
-            {product.badge && <span className="badge badge-gray">{product.badge}</span>}
-            {discount > 0 && <span className="badge badge-red">{discount}% OFF</span>}
-          </div>
-          <h1 className="text-3xl font-bold text-[var(--black)]">{product.name}</h1>
-          <div className="mt-3 flex items-center gap-2">
-            <span className="text-[#f59e0b]">
-              {"★".repeat(Math.floor(product.rating))}
-              {"☆".repeat(5 - Math.floor(product.rating))}
-            </span>
-            <span className="text-sm text-[var(--black)]">
-              {product.rating} · {product.reviews} reviews
-            </span>
-          </div>
-          <div className="mt-6">
-            <div className="font-[family-name:var(--font-montserrat)] text-4xl font-bold text-[var(--black)]">
-              {fmtRp(product.price)}
-            </div>
-            {product.originalPrice && (
-              <div className="mt-1 flex gap-2 text-sm">
-                <span className="text-[var(--gray-500)] line-through">{fmtRp(product.originalPrice)}</span>
-                <span className="text-[var(--orange)]">
-                  Save {fmtRp(product.originalPrice - product.price)}
-                </span>
-              </div>
+            {imageUrl && (
+              <Image src={imageUrl} alt={product.title} fill className="object-contain p-8" priority />
             )}
           </div>
-          <p className="mt-2 text-sm text-[var(--black)]">
-            <strong>{product.stock} units</strong> in stock
-          </p>
+          {/* Thumbnail gallery */}
+          {product.images?.length > 1 && (
+            <div className="mt-3 flex gap-2">
+              {product.images.slice(0, 4).map((img, i) => (
+                <div key={i} className="relative h-16 w-16 overflow-hidden rounded-lg border border-[var(--gray-200)] bg-[var(--gray-50)]">
+                  <Image src={img} alt={`${product.title} ${i + 1}`} fill className="object-contain p-1" />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div>
+          <div className="mb-3 flex flex-wrap gap-2">
+            <span className="badge badge-orange">{product.category.name}</span>
+          </div>
+          <h1 className="text-3xl font-bold text-[var(--black)]">{product.title}</h1>
+
+          <div className="mt-6">
+            <div className="font-[family-name:var(--font-montserrat)] text-4xl font-bold text-[var(--black)]">
+              {fmtUsd(product.price)}
+            </div>
+          </div>
+
           <p className="mt-6 text-[var(--black)]">{product.description}</p>
+
           <div className="mt-6 rounded-xl border border-[var(--gray-200)]">
-            {Object.entries(product.specs).map(([k, v]) => (
+            {[
+              ["Category", product.category.name],
+              ["Price", fmtUsd(product.price)],
+              ["Added", new Date(product.creationAt).toLocaleDateString("en-US")],
+              ["Last Updated", new Date(product.updatedAt).toLocaleDateString("en-US")],
+            ].map(([k, v]) => (
               <div key={k} className="flex justify-between border-b border-[var(--gray-100)] px-4 py-2.5 text-sm last:border-0">
                 <span className="text-[var(--black)]">{k}</span>
                 <span className="font-medium text-[var(--black)]">{v}</span>
               </div>
             ))}
           </div>
-          <div className="mt-6">
-            <div className="mb-2 text-sm font-bold text-[var(--black)]">KEY FEATURES</div>
-            {product.features.map((f) => (
-              <div key={f} className="mb-1.5 flex gap-2 text-sm text-[var(--black)]">
-                <span className="text-[var(--orange)]">✓</span>
-                {f}
-              </div>
-            ))}
-          </div>
+
           <div className="mt-6 flex items-center gap-4">
             <span className="text-sm font-semibold text-[var(--black)]">Quantity:</span>
             <div className="flex items-center rounded-lg border border-[var(--gray-200)]">
@@ -97,6 +86,7 @@ export function ProductDetail({ product, related }: ProductDetailProps) {
               </button>
             </div>
           </div>
+
           <div className="mt-6 flex flex-wrap gap-3">
             <button
               type="button"
@@ -115,6 +105,7 @@ export function ProductDetail({ product, related }: ProductDetailProps) {
           </div>
         </div>
       </div>
+
       {related.length > 0 && (
         <section className="mt-16">
           <h2 className="display-md mb-8 text-[var(--black)]">Related Products</h2>
