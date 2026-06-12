@@ -28,7 +28,7 @@ export default async function HomePage() {
             {/* Left — typography dominant */}
             <div className="py-20 pr-0 lg:pr-16">
               <p className="mb-4 text-xs font-semibold uppercase tracking-[4px] text-[#8141E6]">
-                Indonesia's Online Marketplace
+                Indonesia&apos;s Online Marketplace
               </p>
               <h1
                 className="font-[family-name:var(--font-display)] text-[clamp(56px,8vw,104px)] leading-[0.92] tracking-tight text-black"
@@ -250,7 +250,7 @@ export default async function HomePage() {
             {testimonials.map((t) => (
               <div key={t.name} className="bg-white p-10">
                 <div className="mb-6 font-[family-name:var(--font-display)] text-6xl leading-none text-[#8141E6]">
-                  "
+                  &ldquo;
                 </div>
                 <p className="mb-8 text-sm leading-relaxed text-neutral-600">{t.text}</p>
                 <div className="flex items-center gap-3">

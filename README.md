@@ -25,7 +25,7 @@ A modern global e-commerce marketplace built with Next.js, featuring real-time p
 
 ## Live Demo
 
-Access the live application at: https://www.naz-ahtamir.site/
+Access the live application at: https://revo-shop.naz-ahtamir.site/
 
 ## Demo Credentials
 

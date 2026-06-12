@@ -16,7 +16,7 @@ export function getCartFromStorage(): CartItem[] {
       if (typeof item.category === 'object' && item.category !== null) {
         // Try to fix it if it has a name property
         if ('name' in item.category) {
-          item.category = (item.category as any).name;
+          item.category = (item.category as { name: string }).name;
           return true;
         }
         // Remove corrupted items
