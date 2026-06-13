@@ -186,16 +186,6 @@ This project fulfills the following assignment requirements:
 - ✅ **CRUD Operations**: Full product management with API routes
 - ✅ **Responsive Design**: Mobile-first approach with Tailwind CSS
 
-## License
-
-MIT License - Feel free to use this project for educational purposes.
-
-## Author
-
-**Naz Ahtamir**  
-- GitHub: [naz-ahtamir](https://github.com/naz-ahtamir)
-- Portfolio: https://www.naz-ahtamir.site/
-
 ## Acknowledgments
 
 - Product data provided by [Platzi Fake Store API](https://www.escuelajs.com/api-docs/)
