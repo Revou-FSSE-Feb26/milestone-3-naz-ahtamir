@@ -2,28 +2,28 @@ import Link from "next/link";
 
 const deals = [
   {
-    pct: "40%",
-    label: "Flash Sale – Helmets",
-    desc: "All safety helmets 40% off this weekend. Limited stock available.",
-    products: ["Safety Helmet", "Hard Hat", "MSA Helmet"],
-    expires: "June 30, 2027",
+    pct: "50%",
+    label: "Electronics Flash Sale",
+    desc: "Get up to 50% off on selected electronics. Limited time offer!",
+    products: ["Electronics", "Smartphones", "Laptops"],
+    expires: "June 30, 2026",
   },
   {
-    pct: "25%",
-    label: "Corporate Bundle",
-    desc: "Complete PPE sets for 20+ employees.",
-    products: ["Set Lengkap APD"],
-    expires: "December 31, 2027",
+    pct: "30%",
+    label: "Fashion Week Special",
+    desc: "Upgrade your wardrobe with 30% off on all clothing and shoes.",
+    products: ["Clothes", "Shoes", "Accessories"],
+    expires: "July 15, 2026",
   },
   {
     pct: "FREE",
-    label: "Shipping on Rp500K+",
-    desc: "Free nationwide shipping for orders above Rp 500,000.",
+    label: "Free Shipping on $50+",
+    desc: "Enjoy free nationwide shipping on orders above $50.",
     products: ["All products"],
     expires: "Ongoing",
   },
   {
-    pct: "12%",
+    pct: "15%",
     label: "New Member Welcome",
     desc: "First order discount for new registered members.",
     products: ["All products"],
@@ -60,7 +60,7 @@ export default function PromoPage() {
           <p className="mt-4 text-xs text-[var(--black)]">Valid until: {d.expires}</p>
           <div className="flex-1" />
           <Link href="/products" className="btn btn-outline btn-sm mt-8 inline-flex w-fit">
-            Shop Now
+            Shop Now →
           </Link>
         </div>
         ))}
